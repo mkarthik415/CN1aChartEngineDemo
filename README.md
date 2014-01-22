@@ -8,7 +8,7 @@ Apache License 2.0
 
 ##Downloads
 
-* [MyApplication-debug.apk](...) - An android build of this application.
+* [MyApplication-debug.apk](https://github.com/shannah/CN1aChartEngineDemo/raw/master/dist/MyApplication-debug.apk) - An android build of this application.
 
 For other platforms (iOS, Windows Phone, RIM, and J2ME) you should be able to download the project and build it yourself.
 
