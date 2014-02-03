@@ -57,7 +57,8 @@ public class ChartDemosForm extends Form {
         new ListOption(SensorValuesChart.class, "Sensor Values Chart"),
         new ListOption(TemperatureChart.class, "Temperature Chart"),
         new ListOption(TrigonometricFunctionsChart.class, "Trigonometric Functions Chart"),
-        new ListOption(WeightDialChart.class, "Weight Dial Chart")
+        new ListOption(WeightDialChart.class, "Weight Dial Chart"),
+        new ListOption(ChartsInBoxLayout.class, "Vertical Box Layout")
     };
     
     public ChartDemosForm(){
@@ -73,6 +74,19 @@ public class ChartDemosForm extends Form {
                 int sel = formMenu.getCurrentSelected();
                 ListOption opt = options[sel];
                 Class cls = opt.chartClass;
+                if ( ChartsInBoxLayout.class.equals(cls) ){
+                    Form f = new ChartsInBoxLayout().getForm();
+                    f.setBackCommand(new Command("Menu"){
+
+                        @Override
+                        public void actionPerformed(ActionEvent evt) {
+                            ChartDemosForm.this.showBack();
+                        }
+                        
+                    });
+                    f.show();
+                    return;
+                }
                 try {
                     AbstractDemoChart demo = (AbstractDemoChart)cls.newInstance();
                     Context context = new Context();
