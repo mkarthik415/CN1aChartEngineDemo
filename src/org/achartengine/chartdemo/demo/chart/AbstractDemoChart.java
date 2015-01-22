@@ -15,19 +15,24 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
+import com.codename1.charts.models.CategorySeries;
+import com.codename1.charts.models.MultipleCategorySeries;
+import com.codename1.charts.models.TimeSeries;
+import com.codename1.charts.models.XYMultipleSeriesDataset;
+import com.codename1.charts.models.XYSeries;
+import com.codename1.charts.renderers.DefaultRenderer;
+import com.codename1.charts.renderers.SimpleSeriesRenderer;
+import com.codename1.charts.renderers.XYMultipleSeriesRenderer;
+import com.codename1.charts.renderers.XYSeriesRenderer;
+import com.codename1.charts.views.PointStyle;
+import com.codename1.ui.Component;
+import com.codename1.ui.Form;
+import com.codename1.ui.layouts.BorderLayout;
 import java.util.Date;
 import java.util.List;
 
-import org.achartengine.chart.PointStyle;
-import org.achartengine.model.CategorySeries;
-import org.achartengine.model.MultipleCategorySeries;
-import org.achartengine.model.TimeSeries;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.DefaultRenderer;
-import org.achartengine.renderer.SimpleSeriesRenderer;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
+
+
 
 /**
  * An abstract class for the demo charts to extend. It contains some methods for
@@ -242,6 +247,13 @@ public abstract class AbstractDemoChart implements IDemoChart {
       renderer.addSeriesRenderer(r);
     }
     return renderer;
+  }
+  
+  protected Form wrap(String title, Component c){
+      Form f = new Form(title);
+      f.setLayout(new BorderLayout());
+      f.addComponent(BorderLayout.CENTER, c);
+      return f;
   }
 
 }

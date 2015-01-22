@@ -15,19 +15,21 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.renderers.XYMultipleSeriesRenderer;
+import com.codename1.charts.renderers.XYSeriesRenderer;
+import com.codename1.charts.renderers.XYSeriesRenderer.FillOutsideLine;
+import com.codename1.charts.views.PointStyle;
+import com.codename1.charts.views.TimeChart;
+import com.codename1.ui.Form;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.DateUtil;
-import org.achartengine.compat.Intent;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer.FillOutsideLine;
+
+import com.codename1.charts.util.ColorUtil;
+import java.util.Calendar;
+
 
 
 /**
@@ -58,7 +60,7 @@ public class SalesGrowthChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     String[] titles = new String[] { "Sales growth January 1995 to December 2000" };
     List<Date[]> dates = new ArrayList<Date[]>();
     List<double[]> values = new ArrayList<double[]>();
@@ -73,27 +75,45 @@ public class SalesGrowthChart extends AbstractDemoChart {
 
     values.add(new double[] { 4.9, 5.3, 3.2, 4.5, 6.5, 4.7, 5.8, 4.3, 4, 2.3, -0.5, -2.9, 3.2, 5.5,
         4.6, 9.4, 4.3, 1.2, 0, 0.4, 4.5, 3.4, 4.5, 4.3, 4 });
-    int[] colors = new int[] { Color.BLUE };
+    int[] colors = new int[] { ColorUtil.BLUE };
     PointStyle[] styles = new PointStyle[] { PointStyle.POINT };
     XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
     setChartSettings(renderer, "Sales growth", "Date", "%", dateValues[0].getTime(),
-        dateValues[dateValues.length - 1].getTime(), -4, 11, Color.GRAY, Color.LTGRAY);
+        dateValues[dateValues.length - 1].getTime(), -4, 11, ColorUtil.GRAY, ColorUtil.LTGRAY);
     renderer.setYLabels(10);
     renderer.setXRoundedLabels(false);
     XYSeriesRenderer xyRenderer = (XYSeriesRenderer) renderer.getSeriesRendererAt(0);
     FillOutsideLine fill = new FillOutsideLine(FillOutsideLine.Type.BOUNDS_ABOVE);
-    fill.setColor(Color.GREEN);
+    fill.setColor(ColorUtil.GREEN);
     xyRenderer.addFillOutsideLine(fill);
     fill = new FillOutsideLine(FillOutsideLine.Type.BOUNDS_BELOW);
-    fill.setColor(Color.MAGENTA);
+    fill.setColor(ColorUtil.MAGENTA);
     xyRenderer.addFillOutsideLine(fill);
     fill = new FillOutsideLine(FillOutsideLine.Type.BOUNDS_ABOVE);
-    fill.setColor(Color.argb(255, 0, 200, 100));
+    fill.setColor(ColorUtil.argb(255, 0, 200, 100));
     fill.setFillRange(new int[] {10, 19});
     xyRenderer.addFillOutsideLine(fill);
 
-    return ChartFactory.getTimeChartIntent(context, buildDateDataset(titles, dates, values),
-        renderer, "MMM yyyy");
+    TimeChart chart = new TimeChart(buildDateDataset(titles, dates, values),
+        renderer);
+    return wrap("MMM yyyy", new ChartComponent(chart));
+    
   }
+  
+  public static class DateUtil {
+
+    public static int getTimezoneOffset(Date date) {
+        return 0;
+    }
+    
+    public static Date date(int y, int m, int d){
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, y);
+        c.set(Calendar.MONTH, m);
+        c.set(Calendar.DAY_OF_MONTH, d);
+        return c.getTime();
+    }
+    
+}
 
 }

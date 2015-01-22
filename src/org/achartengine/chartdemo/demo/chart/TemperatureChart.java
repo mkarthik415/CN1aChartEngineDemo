@@ -15,16 +15,19 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.chart.BarChart.Type;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
-import org.achartengine.compat.Paint.Align;
-import org.achartengine.model.RangeCategorySeries;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.models.RangeCategorySeries;
+import com.codename1.charts.models.XYMultipleSeriesDataset;
+import com.codename1.charts.renderers.XYMultipleSeriesRenderer;
+import com.codename1.charts.renderers.XYSeriesRenderer;
+import com.codename1.charts.views.BarChart.Type;
+import com.codename1.charts.views.RangeBarChart;
+import com.codename1.ui.Component;
+import com.codename1.ui.Form;
+
+import com.codename1.charts.util.ColorUtil;
+
+
 
 /**
  * Temperature demo range chart.
@@ -55,7 +58,7 @@ public class TemperatureChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     double[] minValues = new double[] { -24, -19, -10, -1, 7, 12, 15, 14, 9, 1, -11, -16 };
     double[] maxValues = new double[] { 7, 12, 24, 28, 33, 35, 37, 36, 28, 19, 11, 4 };
 
@@ -66,10 +69,10 @@ public class TemperatureChart extends AbstractDemoChart {
       series.add(minValues[k], maxValues[k]);
     }
     dataset.addSeries(series.toXYSeries());
-    int[] colors = new int[] { Color.CYAN };
+    int[] colors = new int[] { ColorUtil.CYAN };
     XYMultipleSeriesRenderer renderer = buildBarRenderer(colors);
     setChartSettings(renderer, "Monthly temperature range", "Month", "Celsius degrees", 0.5, 12.5,
-        -30, 45, Color.GRAY, Color.LTGRAY);
+        -30, 45, ColorUtil.GRAY, ColorUtil.LTGRAY);
     renderer.setBarSpacing(0.5);
     renderer.setXLabels(0);
     renderer.setYLabels(10);
@@ -84,16 +87,18 @@ public class TemperatureChart extends AbstractDemoChart {
     renderer.addYTextLabel(5, "OK");
     renderer.addYTextLabel(20, "Nice");
     renderer.setMargins(new int[] {30, 70, 10, 0});
-    renderer.setYLabelsAlign(Align.RIGHT);
+    renderer.setYLabelsAlign(Component.RIGHT);
     XYSeriesRenderer r = (XYSeriesRenderer) renderer.getSeriesRendererAt(0);
     r.setDisplayChartValues(true);
     r.setChartValuesTextSize(12);
     r.setChartValuesSpacing(3);
     r.setGradientEnabled(true);
-    r.setGradientStart(-20, Color.BLUE);
-    r.setGradientStop(20, Color.GREEN);
-    return ChartFactory.getRangeBarChartIntent(context, dataset, renderer, Type.DEFAULT,
-        "Temperature range");
+    r.setGradientStart(-20, ColorUtil.BLUE);
+    r.setGradientStop(20, ColorUtil.GREEN);
+    
+    RangeBarChart chart = new RangeBarChart(dataset, renderer, Type.DEFAULT);
+    return wrap("Temperature range", new ChartComponent(chart));
+    
   }
 
 }

@@ -15,18 +15,21 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.renderers.XYMultipleSeriesRenderer;
+import com.codename1.charts.renderers.XYSeriesRenderer;
+import com.codename1.charts.views.PointStyle;
+import com.codename1.charts.views.TimeChart;
+import com.codename1.ui.Form;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.DateUtil;
-import org.achartengine.compat.Intent;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
+
+import com.codename1.charts.util.ColorUtil;
+import java.util.Calendar;
+
+
 
 
 /**
@@ -57,7 +60,7 @@ public class ProjectStatusChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     String[] titles = new String[] { "New tickets", "Fixed tickets" };
     List<Date[]> dates = new ArrayList<Date[]>();
     List<double[]> values = new ArrayList<double[]>();
@@ -80,11 +83,11 @@ public class ProjectStatusChart extends AbstractDemoChart {
     values.add(new double[] { 142, 123, 142, 152, 149, 122, 110, 120, 125, 155, 146, 150 });
     values.add(new double[] { 102, 90, 112, 105, 125, 112, 125, 112, 105, 115, 116, 135 });
     length = values.get(0).length;
-    int[] colors = new int[] { Color.BLUE, Color.GREEN };
+    int[] colors = new int[] { ColorUtil.BLUE, ColorUtil.GREEN };
     PointStyle[] styles = new PointStyle[] { PointStyle.POINT, PointStyle.POINT };
     XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
     setChartSettings(renderer, "Project work status", "Date", "Tickets", dates.get(0)[0].getTime(),
-        dates.get(0)[11].getTime(), 50, 190, Color.GRAY, Color.LTGRAY);
+        dates.get(0)[11].getTime(), 50, 190, ColorUtil.GRAY, ColorUtil.LTGRAY);
     renderer.setXLabels(0);
     renderer.setYLabels(10);
     renderer.addYTextLabel(100, "test");
@@ -94,8 +97,27 @@ public class ProjectStatusChart extends AbstractDemoChart {
       seriesRenderer.setDisplayChartValues(true);
     }
     renderer.setXRoundedLabels(false);
-    return ChartFactory.getTimeChartIntent(context, buildDateDataset(titles, dates, values),
-        renderer, "MM/dd/yyyy");
+    
+    TimeChart chart = new TimeChart(buildDateDataset(titles, dates, values),
+        renderer);
+    return wrap("MM/dd/yyyy", new ChartComponent(chart));
+    
   }
+  
+  public static class DateUtil {
+
+    public static int getTimezoneOffset(Date date) {
+        return 0;
+    }
+    
+    public static Date date(int y, int m, int d){
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, y);
+        c.set(Calendar.MONTH, m);
+        c.set(Calendar.DAY_OF_MONTH, d);
+        return c.getTime();
+    }
+    
+}
 
 }

@@ -5,28 +5,28 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.models.RangeCategorySeries;
+import com.codename1.charts.models.XYMultipleSeriesDataset;
+import com.codename1.charts.models.XYSeries;
+import com.codename1.charts.models.XYValueSeries;
+import com.codename1.charts.renderers.XYMultipleSeriesRenderer;
+import com.codename1.charts.renderers.XYSeriesRenderer;
+import com.codename1.charts.views.BarChart;
+import com.codename1.charts.views.BubbleChart;
+import com.codename1.charts.views.CombinedXYChart;
+import com.codename1.charts.views.CubicLineChart;
+import com.codename1.charts.views.LineChart;
+import com.codename1.charts.views.PointStyle;
+import com.codename1.charts.views.RangeBarChart;
 import com.codename1.ui.Component;
 import com.codename1.ui.Form;
 import com.codename1.ui.layouts.BoxLayout;
 import java.util.ArrayList;
 import java.util.List;
-import org.achartengine.ChartFactory;
-import org.achartengine.chart.BarChart;
-import org.achartengine.chart.BubbleChart;
-import org.achartengine.chart.CombinedXYChart;
-import org.achartengine.chart.CubicLineChart;
-import org.achartengine.chart.LineChart;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
-import org.achartengine.compat.Paint;
-import org.achartengine.model.RangeCategorySeries;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
-import org.achartengine.model.XYValueSeries;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
+
+import com.codename1.charts.util.ColorUtil;
+
 
 /**
  *
@@ -39,14 +39,14 @@ public class ChartsInBoxLayout {
     public ChartsInBoxLayout() {
         form = new Form("Charts in Box Layout");
         form.setLayout(new BoxLayout(BoxLayout.Y_AXIS));
-        Context context = new Context();
-        Component chart1 = getTemperatureChart(context);
+        
+        Component chart1 = getTemperatureChart();
         //chart1.setHeight(300);
         //chart1.setWidth(300);
         chart1.setPreferredH(500);
         
         form.addComponent(chart1);
-        Component chart2 = getCombinedTemperatureChart(context);
+        Component chart2 = getCombinedTemperatureChart();
         chart2.setPreferredH(500);
         //chart2.setHeight(300);
         //chart2.setWidth(300);
@@ -76,7 +76,7 @@ public class ChartsInBoxLayout {
         renderer.setLabelsColor(labelsColor);
     }
 
-    private Component getTemperatureChart(Context context) {
+    private Component getTemperatureChart() {
         double[] minValues = new double[]{-24, -19, -10, -1, 7, 12, 15, 14, 9, 1, -11, -16};
         double[] maxValues = new double[]{7, 12, 24, 28, 33, 35, 37, 36, 28, 19, 11, 4};
 
@@ -87,10 +87,10 @@ public class ChartsInBoxLayout {
             series.add(minValues[k], maxValues[k]);
         }
         dataset.addSeries(series.toXYSeries());
-        int[] colors = new int[]{Color.CYAN};
+        int[] colors = new int[]{ColorUtil.CYAN};
         XYMultipleSeriesRenderer renderer = buildBarRenderer(colors);
         setChartSettings(renderer, "Monthly temperature range", "Month", "Celsius degrees", 0.5, 12.5,
-                -30, 45, Color.GRAY, Color.LTGRAY);
+                -30, 45, ColorUtil.GRAY, ColorUtil.LTGRAY);
         renderer.setBarSpacing(0.5);
         renderer.setXLabels(0);
         renderer.setYLabels(10);
@@ -105,19 +105,20 @@ public class ChartsInBoxLayout {
         renderer.addYTextLabel(5, "OK");
         renderer.addYTextLabel(20, "Nice");
         renderer.setMargins(new int[]{30, 70, 10, 0});
-        renderer.setYLabelsAlign(Paint.Align.RIGHT);
+        renderer.setYLabelsAlign(Component.RIGHT);
         XYSeriesRenderer r = (XYSeriesRenderer) renderer.getSeriesRendererAt(0);
         r.setDisplayChartValues(true);
         r.setChartValuesTextSize(12);
         r.setChartValuesSpacing(3);
         r.setGradientEnabled(true);
-        r.setGradientStart(-20, Color.BLUE);
-        r.setGradientStop(20, Color.GREEN);
-        //ChartFactory.getRangeBarChartView(context, dataset, renderer, BarChart.Type.HEAPED)
-        return ChartFactory.getRangeBarChartView(context, dataset, renderer, BarChart.Type.DEFAULT).getPeer();
+        r.setGradientStart(-20, ColorUtil.BLUE);
+        r.setGradientStop(20, ColorUtil.GREEN);
+        RangeBarChart chart = new RangeBarChart(dataset, renderer, BarChart.Type.DEFAULT);
+        return new ChartComponent(chart);
+        
     }
 
-    private Component getCombinedTemperatureChart(Context context) {
+    private Component getCombinedTemperatureChart() {
         String[] titles = new String[]{"Crete Air Temperature", "Skiathos Air Temperature"};
         List<double[]> x = new ArrayList<double[]>();
         for (int i = 0; i < titles.length; i++) {
@@ -127,7 +128,7 @@ public class ChartsInBoxLayout {
         values.add(new double[]{12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2,
             13.9});
         values.add(new double[]{9, 10, 11, 15, 19, 23, 26, 25, 22, 18, 13, 10});
-        int[] colors = new int[]{Color.GREEN, Color.rgb(200, 150, 0)};
+        int[] colors = new int[]{ColorUtil.GREEN, ColorUtil.rgb(200, 150, 0)};
         PointStyle[] styles = new PointStyle[]{PointStyle.CIRCLE, PointStyle.DIAMOND};
         XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
         renderer.setPointSize(5.5f);
@@ -138,13 +139,13 @@ public class ChartsInBoxLayout {
             r.setFillPoints(true);
         }
         setChartSettings(renderer, "Weather data", "Month", "Temperature", 0.5, 12.5, 0, 40,
-                Color.LTGRAY, Color.LTGRAY);
+                ColorUtil.LTGRAY, ColorUtil.LTGRAY);
 
         renderer.setXLabels(12);
         renderer.setYLabels(10);
         renderer.setShowGrid(true);
-        renderer.setXLabelsAlign(Paint.Align.RIGHT);
-        renderer.setYLabelsAlign(Paint.Align.RIGHT);
+        renderer.setXLabelsAlign(Component.RIGHT);
+        renderer.setYLabelsAlign(Component.RIGHT);
         renderer.setZoomButtonsVisible(true);
         renderer.setPanLimits(new double[]{-10, 20, -10, 40});
         renderer.setZoomLimits(new double[]{-10, 20, -10, 40});
@@ -163,7 +164,7 @@ public class ChartsInBoxLayout {
         sunSeries.add(11f, 35, 7.5);
         sunSeries.add(12f, 35, 5.5);
         XYSeriesRenderer lightRenderer = new XYSeriesRenderer();
-        lightRenderer.setColor(Color.YELLOW);
+        lightRenderer.setColor(ColorUtil.YELLOW);
 
         XYSeries waterSeries = new XYSeries("Crete Water Temperature");
         waterSeries.add(1, 16);
@@ -194,10 +195,10 @@ public class ChartsInBoxLayout {
         renderer.setBarSpacing(0.3);
         XYSeriesRenderer waterRenderer1 = new XYSeriesRenderer();
         waterRenderer1.setColor(0xff0099cc);
-        waterRenderer1.setChartValuesTextAlign(Paint.Align.CENTER);
+        waterRenderer1.setChartValuesTextAlign(Component.CENTER);
         XYSeriesRenderer waterRenderer2 = new XYSeriesRenderer();
         waterRenderer2.setColor(0xff9933cc);
-        waterRenderer2.setChartValuesTextAlign(Paint.Align.RIGHT);
+        waterRenderer2.setChartValuesTextAlign(Component.RIGHT);
 
         XYMultipleSeriesDataset dataset = buildDataset(titles, x, values);
         dataset.addSeries(0, sunSeries);
@@ -215,7 +216,9 @@ public class ChartsInBoxLayout {
             new CombinedXYChart.XYCombinedChartDef(BarChart.TYPE, 0, 1), new CombinedXYChart.XYCombinedChartDef(BubbleChart.TYPE, 2),
             new CombinedXYChart.XYCombinedChartDef(LineChart.TYPE, 3), new CombinedXYChart.XYCombinedChartDef(CubicLineChart.TYPE, 4)};
 
-        return ChartFactory.getCombinedXYChartView(context, dataset, renderer, types).getPeer();
+        CombinedXYChart chart = new CombinedXYChart(dataset, renderer, types);
+        return new ChartComponent(chart);
+        
 
     }
 

@@ -15,25 +15,27 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.models.XYMultipleSeriesDataset;
+import com.codename1.charts.models.XYSeries;
+import com.codename1.charts.models.XYValueSeries;
+import com.codename1.charts.renderers.XYMultipleSeriesRenderer;
+import com.codename1.charts.renderers.XYSeriesRenderer;
+import com.codename1.charts.views.BarChart;
+import com.codename1.charts.views.BubbleChart;
+import com.codename1.charts.views.CombinedXYChart;
+import com.codename1.charts.views.CombinedXYChart.XYCombinedChartDef;
+import com.codename1.charts.views.CubicLineChart;
+import com.codename1.charts.views.LineChart;
+import com.codename1.charts.views.PointStyle;
+import com.codename1.ui.Component;
+import com.codename1.ui.Form;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.chart.BarChart;
-import org.achartengine.chart.BubbleChart;
-import org.achartengine.chart.CombinedXYChart.XYCombinedChartDef;
-import org.achartengine.chart.CubicLineChart;
-import org.achartengine.chart.LineChart;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
-import org.achartengine.compat.Paint.Align;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
-import org.achartengine.model.XYValueSeries;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
+import com.codename1.charts.util.ColorUtil;
+
+
 
 
 
@@ -65,7 +67,7 @@ public class CombinedTemperatureChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     String[] titles = new String[] { "Crete Air Temperature", "Skiathos Air Temperature" };
     List<double[]> x = new ArrayList<double[]>();
     for (int i = 0; i < titles.length; i++) {
@@ -75,7 +77,7 @@ public class CombinedTemperatureChart extends AbstractDemoChart {
     values.add(new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2,
         13.9 });
     values.add(new double[] { 9, 10, 11, 15, 19, 23, 26, 25, 22, 18, 13, 10 });
-    int[] colors = new int[] { Color.GREEN, Color.rgb(200, 150, 0) };
+    int[] colors = new int[] { ColorUtil.GREEN, ColorUtil.rgb(200, 150, 0) };
     PointStyle[] styles = new PointStyle[] { PointStyle.CIRCLE, PointStyle.DIAMOND };
     XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
     renderer.setPointSize(5.5f);
@@ -86,13 +88,13 @@ public class CombinedTemperatureChart extends AbstractDemoChart {
       r.setFillPoints(true);
     }
     setChartSettings(renderer, "Weather data", "Month", "Temperature", 0.5, 12.5, 0, 40,
-        Color.LTGRAY, Color.LTGRAY);
+        ColorUtil.LTGRAY, ColorUtil.LTGRAY);
 
     renderer.setXLabels(12);
     renderer.setYLabels(10);
     renderer.setShowGrid(true);
-    renderer.setXLabelsAlign(Align.RIGHT);
-    renderer.setYLabelsAlign(Align.RIGHT);
+    renderer.setXLabelsAlign(Component.RIGHT);
+    renderer.setYLabelsAlign(Component.RIGHT);
     renderer.setZoomButtonsVisible(true);
     renderer.setPanLimits(new double[] { -10, 20, -10, 40 });
     renderer.setZoomLimits(new double[] { -10, 20, -10, 40 });
@@ -111,7 +113,7 @@ public class CombinedTemperatureChart extends AbstractDemoChart {
     sunSeries.add(11f, 35, 7.5);
     sunSeries.add(12f, 35, 5.5);
     XYSeriesRenderer lightRenderer = new XYSeriesRenderer();
-    lightRenderer.setColor(Color.YELLOW);
+    lightRenderer.setColor(ColorUtil.YELLOW);
 
     XYSeries waterSeries = new XYSeries("Crete Water Temperature");
     waterSeries.add(1, 16);
@@ -142,10 +144,10 @@ public class CombinedTemperatureChart extends AbstractDemoChart {
     renderer.setBarSpacing(0.3);
     XYSeriesRenderer waterRenderer1 = new XYSeriesRenderer();
     waterRenderer1.setColor(0xff0099cc);
-    waterRenderer1.setChartValuesTextAlign(Align.CENTER);
+    waterRenderer1.setChartValuesTextAlign(Component.CENTER);
     XYSeriesRenderer waterRenderer2 = new XYSeriesRenderer();
     waterRenderer2.setColor(0xff9933cc);
-    waterRenderer2.setChartValuesTextAlign(Align.RIGHT);
+    waterRenderer2.setChartValuesTextAlign(Component.RIGHT);
 
     XYMultipleSeriesDataset dataset = buildDataset(titles, x, values);
     dataset.addSeries(0, sunSeries);
@@ -162,9 +164,10 @@ public class CombinedTemperatureChart extends AbstractDemoChart {
     XYCombinedChartDef[] types = new XYCombinedChartDef[] {
         new XYCombinedChartDef(BarChart.TYPE, 0, 1), new XYCombinedChartDef(BubbleChart.TYPE, 2),
         new XYCombinedChartDef(LineChart.TYPE, 3), new XYCombinedChartDef(CubicLineChart.TYPE, 4) };
-    Intent intent = ChartFactory.getCombinedXYChartIntent(context, dataset, renderer, types,
-        "Weather parameters");
-    return intent;
+    
+    CombinedXYChart chart = new CombinedXYChart(dataset, renderer, types);
+    return wrap("Weather parameters", new ChartComponent(chart));
+   
   }
 
 }

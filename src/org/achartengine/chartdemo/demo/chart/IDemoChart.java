@@ -15,8 +15,9 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
+import com.codename1.ui.Form;
+
+
 
 
 
@@ -49,6 +50,6 @@ public interface IDemoChart {
    * @param context the context
    * @return the built intent
    */
-  Intent execute(Context context);
+  Form execute();
 
 }

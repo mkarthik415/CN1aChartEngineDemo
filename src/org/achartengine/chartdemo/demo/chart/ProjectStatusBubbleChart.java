@@ -15,14 +15,17 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYValueSeries;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.models.XYMultipleSeriesDataset;
+import com.codename1.charts.models.XYValueSeries;
+import com.codename1.charts.renderers.XYMultipleSeriesRenderer;
+import com.codename1.charts.renderers.XYSeriesRenderer;
+import com.codename1.charts.views.BubbleChart;
+import com.codename1.ui.Form;
+
+import com.codename1.charts.util.ColorUtil;
+
+
 
 
 
@@ -54,7 +57,7 @@ public class ProjectStatusBubbleChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     XYMultipleSeriesDataset series = new XYMultipleSeriesDataset();
     XYValueSeries newTicketSeries = new XYValueSeries("New Tickets");
     newTicketSeries.add(1f, 2, 14);
@@ -78,18 +81,21 @@ public class ProjectStatusBubbleChart extends AbstractDemoChart {
     renderer.setLegendTextSize(15);
     renderer.setMargins(new int[] { 20, 30, 15, 0 });
     XYSeriesRenderer newTicketRenderer = new XYSeriesRenderer();
-    newTicketRenderer.setColor(Color.BLUE);
+    newTicketRenderer.setColor(ColorUtil.BLUE);
     renderer.addSeriesRenderer(newTicketRenderer);
     XYSeriesRenderer fixedTicketRenderer = new XYSeriesRenderer();
-    fixedTicketRenderer.setColor(Color.GREEN);
+    fixedTicketRenderer.setColor(ColorUtil.GREEN);
     renderer.addSeriesRenderer(fixedTicketRenderer);
 
-    setChartSettings(renderer, "Project work status", "Priority", "", 0.5, 5.5, 0, 5, Color.GRAY,
-        Color.LTGRAY);
+    setChartSettings(renderer, "Project work status", "Priority", "", 0.5, 5.5, 0, 5, ColorUtil.GRAY,
+        ColorUtil.LTGRAY);
     renderer.setXLabels(7);
     renderer.setYLabels(0);
     renderer.setShowGrid(false);
-    return ChartFactory.getBubbleChartIntent(context, series, renderer, "Project tickets");
+    
+    BubbleChart chart = new BubbleChart(series, renderer);
+    return wrap("Project tickets", new ChartComponent(chart));
+    
   }
 
 }

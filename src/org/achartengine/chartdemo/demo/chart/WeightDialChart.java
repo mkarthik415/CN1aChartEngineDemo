@@ -15,14 +15,17 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
-import org.achartengine.model.CategorySeries;
-import org.achartengine.renderer.DialRenderer;
-import org.achartengine.renderer.SimpleSeriesRenderer;
-import org.achartengine.renderer.DialRenderer.Type;
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.models.CategorySeries;
+import com.codename1.charts.renderers.DialRenderer;
+import com.codename1.charts.renderers.DialRenderer.Type;
+import com.codename1.charts.renderers.SimpleSeriesRenderer;
+import com.codename1.charts.views.DialChart;
+import com.codename1.ui.Form;
+
+import com.codename1.charts.util.ColorUtil;
+
+
 
 
 
@@ -51,7 +54,7 @@ public class WeightDialChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     CategorySeries category = new CategorySeries("Weight indic");
     category.add("Current", 75);
     category.add("Minimum", 65);
@@ -62,21 +65,24 @@ public class WeightDialChart extends AbstractDemoChart {
     renderer.setLegendTextSize(15);
     renderer.setMargins(new int[] {20, 30, 15, 0});
     SimpleSeriesRenderer r = new SimpleSeriesRenderer();
-    r.setColor(Color.BLUE);
+    r.setColor(ColorUtil.BLUE);
     renderer.addSeriesRenderer(r);
     r = new SimpleSeriesRenderer();
-    r.setColor(Color.rgb(0, 150, 0));
+    r.setColor(ColorUtil.rgb(0, 150, 0));
     renderer.addSeriesRenderer(r);
     r = new SimpleSeriesRenderer();
-    r.setColor(Color.GREEN);
+    r.setColor(ColorUtil.GREEN);
     renderer.addSeriesRenderer(r);
     renderer.setLabelsTextSize(10);
-    renderer.setLabelsColor(Color.WHITE);
+    renderer.setLabelsColor(ColorUtil.WHITE);
     renderer.setShowLabels(true);
     renderer.setVisualTypes(new DialRenderer.Type[] {Type.ARROW, Type.NEEDLE, Type.NEEDLE});
     renderer.setMinValue(0);
     renderer.setMaxValue(150);
-    return ChartFactory.getDialChartIntent(context, category, renderer, "Weight indicator");
+    
+    DialChart chart = new DialChart(category, renderer);
+    return wrap("Weight indicator", new ChartComponent(chart));
+    
   }
 
 }

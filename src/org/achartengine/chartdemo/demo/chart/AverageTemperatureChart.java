@@ -15,19 +15,22 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.models.XYMultipleSeriesDataset;
+import com.codename1.charts.models.XYSeries;
+import com.codename1.charts.renderers.XYMultipleSeriesRenderer;
+import com.codename1.charts.renderers.XYSeriesRenderer;
+import com.codename1.charts.views.LineChart;
+import com.codename1.charts.views.PointStyle;
+import com.codename1.io.Log;
+import com.codename1.ui.Component;
+import com.codename1.ui.Form;
+import com.codename1.ui.Transform;
 import java.util.ArrayList;
 import java.util.List;
+import com.codename1.charts.util.ColorUtil;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
-import org.achartengine.compat.Paint.Align;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
+
 
 
 
@@ -59,7 +62,7 @@ public class AverageTemperatureChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     String[] titles = new String[] { "Crete", "Corfu", "Thassos", "Skiathos" };
     List<double[]> x = new ArrayList<double[]>();
     for (int i = 0; i < titles.length; i++) {
@@ -71,7 +74,7 @@ public class AverageTemperatureChart extends AbstractDemoChart {
     values.add(new double[] { 10, 10, 12, 15, 20, 24, 26, 26, 23, 18, 14, 11 });
     values.add(new double[] { 5, 5.3, 8, 12, 17, 22, 24.2, 24, 19, 15, 9, 6 });
     values.add(new double[] { 9, 10, 11, 15, 19, 23, 26, 25, 22, 18, 13, 10 });
-    int[] colors = new int[] { Color.BLUE, Color.GREEN, Color.CYAN, Color.YELLOW };
+    int[] colors = new int[] { ColorUtil.BLUE, ColorUtil.GREEN, ColorUtil.CYAN, ColorUtil.YELLOW };
     PointStyle[] styles = new PointStyle[] { PointStyle.CIRCLE, PointStyle.DIAMOND,
         PointStyle.TRIANGLE, PointStyle.SQUARE };
     XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
@@ -80,27 +83,34 @@ public class AverageTemperatureChart extends AbstractDemoChart {
       ((XYSeriesRenderer) renderer.getSeriesRendererAt(i)).setFillPoints(true);
     }
     setChartSettings(renderer, "Average temperature", "Month", "Temperature", 0.5, 12.5, -10, 40,
-        Color.LTGRAY, Color.LTGRAY);
+        ColorUtil.LTGRAY, ColorUtil.LTGRAY);
     renderer.setXLabels(12);
     renderer.setYLabels(10);
     renderer.setShowGrid(true);
-    renderer.setXLabelsAlign(Align.RIGHT);
-    renderer.setYLabelsAlign(Align.RIGHT);
+    renderer.setXLabelsAlign(Component.RIGHT);
+    renderer.setYLabelsAlign(Component.RIGHT);
     renderer.setZoomButtonsVisible(true);
     renderer.setPanLimits(new double[] { -10, 20, -10, 40 });
     renderer.setZoomLimits(new double[] { -10, 20, -10, 40 });
-
+    renderer.setZoomEnabled(true);
+    renderer.setZoomRate(10);
+    
+    
     XYMultipleSeriesDataset dataset = buildDataset(titles, x, values);
     XYSeries series = dataset.getSeriesAt(0);
     series.addAnnotation("Vacation", 6, 28);
 
     XYSeriesRenderer r = (XYSeriesRenderer) renderer.getSeriesRendererAt(0);
-    r.setAnnotationsColor(Color.GREEN);
+    r.setAnnotationsColor(ColorUtil.GREEN);
     r.setAnnotationsTextSize(15);
-    r.setAnnotationsTextAlign(Align.CENTER);
-    Intent intent = ChartFactory.getLineChartIntent(context, dataset, renderer,
-        "Average temperature");
-    return intent;
+    r.setAnnotationsTextAlign(Component.CENTER);
+    LineChart chart = new LineChart(dataset, renderer);
+    ChartComponent c = new ChartComponent(chart);
+    Transform t = Transform.makeScale(2, 2);
+    t.translate(50,50);
+    c.setTransform(t);
+    return wrap("Average temperature", c);
+    
   }
 
     

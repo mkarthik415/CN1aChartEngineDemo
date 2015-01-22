@@ -15,14 +15,17 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.renderers.DefaultRenderer;
+import com.codename1.charts.views.DoughnutChart;
+import com.codename1.ui.Form;
+import com.codename1.ui.layouts.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
-import org.achartengine.renderer.DefaultRenderer;
+import com.codename1.charts.util.ColorUtil;
+
+
 
 
 
@@ -54,22 +57,24 @@ public class BudgetDoughnutChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     List<double[]> values = new ArrayList<double[]>();
     values.add(new double[] { 12, 14, 11, 10, 19 });
     values.add(new double[] { 10, 9, 14, 20, 11 });
     List<String[]> titles = new ArrayList<String[]>();
     titles.add(new String[] { "P1", "P2", "P3", "P4", "P5" });
     titles.add(new String[] { "Project1", "Project2", "Project3", "Project4", "Project5" });
-    int[] colors = new int[] { Color.BLUE, Color.GREEN, Color.MAGENTA, Color.YELLOW, Color.CYAN };
+    int[] colors = new int[] { ColorUtil.BLUE, ColorUtil.GREEN, ColorUtil.MAGENTA, ColorUtil.YELLOW, ColorUtil.CYAN };
 
     DefaultRenderer renderer = buildCategoryRenderer(colors);
     renderer.setApplyBackgroundColor(true);
-    renderer.setBackgroundColor(Color.rgb(222, 222, 200));
-    renderer.setLabelsColor(Color.GRAY);
-    return ChartFactory.getDoughnutChartIntent(context,
-        buildMultipleCategoryDataset("Project budget", titles, values), renderer,
-        "Doughnut chart demo");
+    renderer.setBackgroundColor(ColorUtil.rgb(222, 222, 200));
+    renderer.setLabelsColor(ColorUtil.GRAY);
+    
+    DoughnutChart chart = new DoughnutChart(buildMultipleCategoryDataset("Project budget", titles, values), renderer);
+    ChartComponent c = new ChartComponent(chart);
+    return wrap("Doughnut Chart Demo", c);
+    
   }
 
 }

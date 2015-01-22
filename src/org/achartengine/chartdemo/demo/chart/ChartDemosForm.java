@@ -14,8 +14,8 @@ import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
+
+
 
 /**
  *
@@ -58,7 +58,8 @@ public class ChartDemosForm extends Form {
         new ListOption(TemperatureChart.class, "Temperature Chart"),
         new ListOption(TrigonometricFunctionsChart.class, "Trigonometric Functions Chart"),
         new ListOption(WeightDialChart.class, "Weight Dial Chart"),
-        new ListOption(ChartsInBoxLayout.class, "Vertical Box Layout")
+        new ListOption(ChartsInBoxLayout.class, "Vertical Box Layout"),
+        new ListOption(MetricsStackedBarChart.class, "Metrics Stacked Bar Chart")
     };
     
     public ChartDemosForm(){
@@ -76,31 +77,36 @@ public class ChartDemosForm extends Form {
                 Class cls = opt.chartClass;
                 if ( ChartsInBoxLayout.class.equals(cls) ){
                     Form f = new ChartsInBoxLayout().getForm();
-                    f.setBackCommand(new Command("Menu"){
+                    Command cmd = new Command("Menu"){
 
                         @Override
                         public void actionPerformed(ActionEvent evt) {
                             ChartDemosForm.this.showBack();
                         }
                         
-                    });
+                    };
                     f.show();
                     return;
                 }
                 try {
                     AbstractDemoChart demo = (AbstractDemoChart)cls.newInstance();
-                    Context context = new Context();
-                    context.setBackCommand(new Command("Menu"){
+                   
+                    Form intent = demo.execute();
+                    if ( "".equals(intent.getTitle())){
+                        intent.setTitle(demo.getName());
+                    }
+                    Command cmd = new Command("Menu"){
 
                         @Override
                         public void actionPerformed(ActionEvent evt) {
                             ChartDemosForm.this.showBack();
                         }
                         
-                    });
-                    Intent intent = demo.execute(context);
-                    
-                    context.startActivity(intent);
+                    };
+                    intent.setBackCommand(cmd);
+                    intent.getStyle().setBgColor(0x0);
+                    intent.getStyle().setBgTransparency(0xff);
+                    intent.show();
                 } catch (InstantiationException ex) {
                     Log.e(ex);
                 } catch (IllegalAccessException ex) {

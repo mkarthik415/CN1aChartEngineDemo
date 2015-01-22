@@ -15,17 +15,18 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.renderers.XYMultipleSeriesRenderer;
+import com.codename1.charts.renderers.XYSeriesRenderer;
+import com.codename1.charts.views.PointStyle;
+import com.codename1.ui.Form;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
+import com.codename1.charts.util.ColorUtil;
+
+
 
 
 
@@ -57,7 +58,7 @@ public class ScatterChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     String[] titles = new String[] { "Series 1", "Series 2", "Series 3", "Series 4", "Series 5" };
     List<double[]> x = new ArrayList<double[]>();
     List<double[]> values = new ArrayList<double[]>();
@@ -74,19 +75,22 @@ public class ScatterChart extends AbstractDemoChart {
       x.add(xValues);
       values.add(yValues);
     }
-    int[] colors = new int[] { Color.BLUE, Color.CYAN, Color.MAGENTA, Color.LTGRAY, Color.GREEN };
+    int[] colors = new int[] { ColorUtil.BLUE, ColorUtil.CYAN, ColorUtil.MAGENTA, ColorUtil.LTGRAY, ColorUtil.GREEN };
     PointStyle[] styles = new PointStyle[] { PointStyle.X, PointStyle.DIAMOND, PointStyle.TRIANGLE,
         PointStyle.SQUARE, PointStyle.CIRCLE };
     XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
-    setChartSettings(renderer, "Scatter chart", "X", "Y", -10, 30, -10, 51, Color.GRAY,
-        Color.LTGRAY);
+    setChartSettings(renderer, "Scatter chart", "X", "Y", -10, 30, -10, 51, ColorUtil.GRAY,
+        ColorUtil.LTGRAY);
     renderer.setXLabels(10);
     renderer.setYLabels(10);
     length = renderer.getSeriesRendererCount();
     for (int i = 0; i < length; i++) {
       ((XYSeriesRenderer) renderer.getSeriesRendererAt(i)).setFillPoints(true);
     }
-    return ChartFactory.getScatterChartIntent(context, buildDataset(titles, x, values), renderer);
+    
+    com.codename1.charts.views.ScatterChart chart = new com.codename1.charts.views.ScatterChart(buildDataset(titles, x, values), renderer);
+    return wrap("", new ChartComponent(chart));
+    
   }
 
 }

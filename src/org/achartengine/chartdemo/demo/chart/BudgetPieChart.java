@@ -15,12 +15,15 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
-import org.achartengine.renderer.DefaultRenderer;
-import org.achartengine.renderer.SimpleSeriesRenderer;
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.renderers.DefaultRenderer;
+import com.codename1.charts.renderers.SimpleSeriesRenderer;
+import com.codename1.charts.views.PieChart;
+import com.codename1.ui.Form;
+
+import com.codename1.charts.util.ColorUtil;
+
+
 
 
 
@@ -52,9 +55,9 @@ public class BudgetPieChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     double[] values = new double[] { 12, 14, 11, 10, 19 };
-    int[] colors = new int[] { Color.BLUE, Color.GREEN, Color.MAGENTA, Color.YELLOW, Color.CYAN };
+    int[] colors = new int[] { ColorUtil.BLUE, ColorUtil.GREEN, ColorUtil.MAGENTA, ColorUtil.YELLOW, ColorUtil.CYAN };
     DefaultRenderer renderer = buildCategoryRenderer(colors);
     renderer.setZoomButtonsVisible(true);
     renderer.setZoomEnabled(true);
@@ -63,12 +66,13 @@ public class BudgetPieChart extends AbstractDemoChart {
     renderer.setShowLabels(true);
     SimpleSeriesRenderer r = renderer.getSeriesRendererAt(0);
     r.setGradientEnabled(true);
-    r.setGradientStart(0, Color.BLUE);
-    r.setGradientStop(0, Color.GREEN);
+    r.setGradientStart(0, ColorUtil.BLUE);
+    r.setGradientStop(0, ColorUtil.GREEN);
     r.setHighlighted(true);
-    Intent intent = ChartFactory.getPieChartIntent(context,
-        buildCategoryDataset("Project budget", values), renderer, "Budget");
-    return intent;
+    PieChart chart = new PieChart(buildCategoryDataset("Project budget", values), renderer);
+    
+    return wrap("Budget", new ChartComponent(chart));
+    
   }
 
 }

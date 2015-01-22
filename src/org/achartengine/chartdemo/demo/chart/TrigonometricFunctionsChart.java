@@ -15,15 +15,17 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.renderers.XYMultipleSeriesRenderer;
+import com.codename1.charts.views.LineChart;
+import com.codename1.charts.views.PointStyle;
+import com.codename1.ui.Form;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import com.codename1.charts.util.ColorUtil;
+
+
 
 
 
@@ -52,7 +54,7 @@ public class TrigonometricFunctionsChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     String[] titles = new String[] { "sin", "cos" };
     List<double[]> x = new ArrayList<double[]>();
     List<double[]> values = new ArrayList<double[]>();
@@ -72,14 +74,17 @@ public class TrigonometricFunctionsChart extends AbstractDemoChart {
       sinValues[i] = Math.sin(rAngle);
       cosValues[i] = Math.cos(rAngle);
     }
-    int [] colors = new int[] { Color.BLUE, Color.CYAN };
+    int [] colors = new int[] { ColorUtil.BLUE, ColorUtil.CYAN };
     PointStyle[] styles = new PointStyle[] { PointStyle.POINT, PointStyle.POINT };
     XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
     setChartSettings(renderer, "Trigonometric functions", "X (in degrees)", "Y", 0, 360, -1, 1,
-        Color.GRAY, Color.LTGRAY);
+        ColorUtil.GRAY, ColorUtil.LTGRAY);
     renderer.setXLabels(20);
     renderer.setYLabels(10);
-    return ChartFactory.getLineChartIntent(context, buildDataset(titles, x, values), renderer);
+    
+    LineChart chart = new LineChart(buildDataset(titles, x, values), renderer);
+    return wrap("", new ChartComponent(chart));
+    
   }
 
 }

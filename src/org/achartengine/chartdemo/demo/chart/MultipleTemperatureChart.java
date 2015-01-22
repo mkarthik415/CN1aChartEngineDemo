@@ -15,18 +15,20 @@
  */
 package org.achartengine.chartdemo.demo.chart;
 
+import com.codename1.charts.ChartComponent;
+import com.codename1.charts.models.XYMultipleSeriesDataset;
+import com.codename1.charts.renderers.XYMultipleSeriesRenderer;
+import com.codename1.charts.renderers.XYSeriesRenderer;
+import com.codename1.charts.views.CubicLineChart;
+import com.codename1.charts.views.PointStyle;
+import com.codename1.ui.Component;
+import com.codename1.ui.Form;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.compat.Color;
-import org.achartengine.compat.Context;
-import org.achartengine.compat.Intent;
-import org.achartengine.compat.Paint.Align;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
+import com.codename1.charts.util.ColorUtil;
+
+
 
 
 
@@ -58,14 +60,14 @@ public class MultipleTemperatureChart extends AbstractDemoChart {
    * @param context the context
    * @return the built intent
    */
-  public Intent execute(Context context) {
+  public Form execute() {
     String[] titles = new String[] { "Air temperature" };
     List<double[]> x = new ArrayList<double[]>();
     x.add(new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 });
     List<double[]> values = new ArrayList<double[]>();
     values.add(new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2,
         13.9 });
-    int[] colors = new int[] { Color.BLUE, Color.YELLOW };
+    int[] colors = new int[] { ColorUtil.BLUE, ColorUtil.YELLOW };
     PointStyle[] styles = new PointStyle[] { PointStyle.POINT, PointStyle.POINT };
     XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer(2);
     setRenderer(renderer, colors, styles);
@@ -75,24 +77,24 @@ public class MultipleTemperatureChart extends AbstractDemoChart {
       r.setLineWidth(3f);
     }
     setChartSettings(renderer, "Average temperature", "Month", "Temperature", 0.5, 12.5, 0, 32,
-        Color.LTGRAY, Color.LTGRAY);
+        ColorUtil.LTGRAY, ColorUtil.LTGRAY);
     renderer.setXLabels(12);
     renderer.setYLabels(10);
     renderer.setShowGrid(true);
-    renderer.setXLabelsAlign(Align.RIGHT);
-    renderer.setYLabelsAlign(Align.RIGHT);
+    renderer.setXLabelsAlign(Component.RIGHT);
+    renderer.setYLabelsAlign(Component.RIGHT);
     renderer.setZoomButtonsVisible(true);
     renderer.setPanLimits(new double[] { -10, 20, -10, 40 });
     renderer.setZoomLimits(new double[] { -10, 20, -10, 40 });
     renderer.setZoomRate(1.05f);
-    renderer.setLabelsColor(Color.WHITE);
-    renderer.setXLabelsColor(Color.GREEN);
+    renderer.setLabelsColor(ColorUtil.WHITE);
+    renderer.setXLabelsColor(ColorUtil.GREEN);
     renderer.setYLabelsColor(0, colors[0]);
     renderer.setYLabelsColor(1, colors[1]);
 
     renderer.setYTitle("Hours", 1);
-    renderer.setYAxisAlign(Align.RIGHT, 1);
-    renderer.setYLabelsAlign(Align.LEFT, 1);
+    renderer.setYAxisAlign(Component.RIGHT, 1);
+    renderer.setYLabelsAlign(Component.LEFT, 1);
     renderer.setGridColor(colors[0], 0);
     renderer.setGridColor(colors[1], 1);
 
@@ -103,8 +105,8 @@ public class MultipleTemperatureChart extends AbstractDemoChart {
     values.add(new double[] { 4.3, 4.9, 5.9, 8.8, 10.8, 11.9, 13.6, 12.8, 11.4, 9.5, 7.5, 5.5 });
     addXYSeries(dataset, new String[] { "Sunshine hours" }, x, values, 1);
 
-    Intent intent = ChartFactory.getCubicLineChartIntent(context, dataset, renderer, 0.3f,
-        "Average temperature");
-    return intent;
+    CubicLineChart chart = new CubicLineChart(dataset, renderer, 0.3f);
+    return wrap("Average temperature", new ChartComponent(chart));
+    
   }
 }
